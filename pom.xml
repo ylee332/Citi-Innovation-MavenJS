@@ -1,0 +1,173 @@
+<!--
+ Copyright 2010 akquinet
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>your.company</groupId>
+    <artifactId>javascript-quickstart-application</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>javascript-quickstart-application</name>
+
+    <organization>
+        <name>akquinet A.G.</name>
+        <url>http://www.akquinet.de/en</url>
+    </organization>
+
+    <scm>
+        <connection>scm:git:https://github.com/ylee332/mavenFromScratch.git</connection>
+        <url>https://github.com/ylee332/mavenFromScratch</url>
+        <developerConnection>scm:git:https://github.com/ylee332/mavenFromScratch.git</developerConnection>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/javascript</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <version>1.0.1-beta-6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateManualRunner</goal>
+                            <goal>resources</goal>
+                            <goal>testResources</goal>
+                            <goal>test</goal>
+                            <goal>preparePackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jsSrcDir>src/main/javascript</jsSrcDir>
+                    <jsTestSrcDir>src/test/javascript</jsTestSrcDir>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>compress-js</id>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- jshint code standard check plugin -->
+            <plugin>
+                <groupId>com.cj.jshintmojo</groupId>
+                <artifactId>jshint-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>2.4.3</version>
+                    <!--jshint options
+                     maxparams: This option lets you set the max number of formal parameters allowed per function
+                     indent:    This option sets a specific tab width for your code.
+                     camelcase: This option allows you to force all variable names to use either camelCase style or UPPER_CASE with underscores.
+                     eqeqeq:    This options prohibits the use of == and != in favor of === and !==.
+                     forin:     This option requires all for in loops to filter object's items.
+                     immed(x):     This option prohibits the use of immediate function invocations without wrapping them in parentheses. 
+                     latedef:   This option prohibits the use of a variable before it was defined.
+                     noarg:     This option prohibits the use of arguments.caller and arguments.callee
+                     noempty:   This option warns when you have an empty block in your code.
+                     nonew:     This option prohibits the use of constructor functions for side-effects
+                     nonbsp:    This option warns about "non-breaking whitespace" characters
+                     unused:    This option warns when you define and never use your variables
+                     undef:     This option prohibits the use of explicitly undeclared variables
+                     
+                     -->
+                    <options>maxparams:3,indent,camelcase,eqeqeq,forin,latedef,noarg,noempty,nonew,nonbsp,unused,undef</options>
+                    <globals>require,$,yourFunkyJavascriptModule</globals>
+                    <configFile>src/main/resources/jshint.conf.js</configFile>
+                    <directories>
+                        <directory>src/main/javascript</directory>
+                    </directories>
+                    <excludes>
+                        <exclude>src/main/webapp/hackyScript.js</exclude>
+                        <exclude>src/main/webapp/myDirectoryForThirdyPartyStuff</exclude>
+                    </excludes>
+                    <reporter>jslint</reporter>
+                    <reportFile>target/jshint.xml</reportFile>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>gr.abiss.mvn.plugins</groupId>
+                <artifactId>maven-jstools-plugin</artifactId>
+                <version>0.7</version>
+                <configuration>
+                    <jsDir>src/main/javascript</jsDir>
+                    <includePrivate>true</includePrivate>
+                    <includeUndocumented>true</includeUndocumented>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jslint</report>
+                            <report>jsdoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

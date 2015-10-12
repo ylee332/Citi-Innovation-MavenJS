@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jslint>
+	<file name="/Users/yoonlee/javascript-quickstart-application/src/main/javascript/quickstart.js">
+		<issue line="53" char="4" reason="Wrap an immediate function invocation in parens to assist the reader in understanding that the expression is the result of a function, and not the function itself." evidence="} ();" severity="W" />
+	</file>
+</jslint>
